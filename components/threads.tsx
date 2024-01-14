@@ -1,8 +1,9 @@
 import { db, postsTable, threadsTable } from "@/app/db/schema";
-import { sql, asc } from "drizzle-orm";
+import { sql, asc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { nanoid } from "nanoid";
 import Link from "next/link";
+import { Button } from "@/components/ui/button.tsx";
 
 async function getThreads(categoryId?: string) {
   const threads = await db
@@ -19,8 +20,10 @@ async function getThreads(categoryId?: string) {
         ? sql`${threadsTable.category_id} = ${categoryId}`
         : sql`1 = 1`
     )
+    .leftJoin(postsTable, eq(threadsTable.id, postsTable.thread_id))
     .groupBy(threadsTable.id)
     .orderBy(asc(threadsTable.created_at));
+  console.log(threads);
 
   return threads;
 }
@@ -36,13 +39,15 @@ export async function ThreadsView({ categoryId }: { categoryId?: string }) {
     <article className="flex flex-col w-full">
       <h2 className="h2">Threads</h2>
 
-      <ul className="flex flex-col mt-8 space-y-4">
+      <ul className="flex flex-col mt-16 space-y-4">
         {threads.map((thread) => (
           <li key={thread.id}>
-            <Link href={`/thread/${thread.id}`}>
-              <h2 className="h3">{thread.name}</h2>
-              <span className="small">{thread.posts} posts</span>
-            </Link>
+            <Button asChild variant="link">
+              <Link href={`/thread/${thread.id}`}>
+                <h2 className="h3">{thread.name}</h2>
+              </Link>
+            </Button>
+            <span className="small">{thread.posts} posts</span>
           </li>
         ))}
       </ul>
