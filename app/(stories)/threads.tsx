@@ -23,7 +23,6 @@ async function getThreads(categoryId?: string) {
     .leftJoin(postsTable, eq(threadsTable.id, postsTable.thread_id))
     .groupBy(threadsTable.id)
     .orderBy(asc(threadsTable.created_at));
-  console.log(threads);
 
   return threads;
 }

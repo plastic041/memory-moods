@@ -2,10 +2,10 @@ import { pgTable, text, index, varchar, timestamp } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import { sql } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
-import * as dotenv from "dotenv";
+// import * as dotenv from "dotenv";
 
-const envPath = process.cwd() + "/.env.local";
-dotenv.config({ path: envPath });
+// const envPath = process.cwd() + "/.env.local";
+// dotenv.config({ path: envPath });
 
 if (!process.env.POSTGRES_URL) {
   throw new Error("POSTGRES_URL environment variable is not set");

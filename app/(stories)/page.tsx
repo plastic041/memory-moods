@@ -1,6 +1,6 @@
 import z from "zod";
 import { headers as dynamic } from "next/headers";
-import { ThreadsView } from "@/components/threads";
+import { ThreadsView } from "@/app/(stories)/threads";
 
 const SearchParamsSchema = z.object({
   p: z.coerce.number().min(1).max(100).optional().default(1),

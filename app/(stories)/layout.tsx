@@ -5,8 +5,8 @@ export default function HNLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col h-screen">
       <header className="flex py-2 px-4 bg-primary">
-        <Link prefetch={true} href="/">
-          <h1 className="h1 text-primary-foreground">Next AI News</h1>
+        <Link href="/">
+          <h1 className="h1 text-primary-foreground">Next Threads</h1>
         </Link>
       </header>
 

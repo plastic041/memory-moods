@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import { ilike } from "drizzle-orm";
 import Link from "next/link";
 import Highlighter from "react-highlight-words";
+import { TimeAgo } from "@/components/time-ago";
 
 const PER_PAGE = 30;
 
@@ -42,19 +43,10 @@ function categoriesWhere({ q }: { q: string | null }) {
     : undefined;
 }
 
-export async function Categories({
-  page = 1,
-  q = null,
-}: {
-  page?: number;
-  q?: string | null;
-}) {
+export async function Categories({ q = null }: { q?: string | null }) {
   const uid = headers().get("x-vercel-id") ?? nanoid();
   console.time(`fetch categories ${uid}`);
-  const categories = await getCategories({
-    page,
-    q,
-  });
+  const categories = await getCategories({ q });
   console.timeEnd(`fetch categories ${uid}`);
 
   const now = Date.now();
@@ -64,9 +56,6 @@ export async function Categories({
         {categories.map((category, n) => {
           return (
             <li key={category.id} className="flex gap-2">
-              <span className="align-top text-[#666] md:text-[#828282] text-right flex-shrink-0 min-w-6 md:min-w-5">
-                {n + (page - 1) * PER_PAGE + 1}.
-              </span>
               <div>
                 <Link
                   prefetch={true}
@@ -84,7 +73,7 @@ export async function Categories({
                   )}
                 </Link>
                 <p className="text-xs text-[#666] md:text-[#828282]">
-                  <timeAgo now={now} date={category.created_at} /> |{" "}
+                  <TimeAgo now={now} date={category.created_at} /> |{" "}
                   <span
                     className="cursor-default"
                     aria-hidden="true"

@@ -1,4 +1,4 @@
-import { ThreadView as ThreadsComponent } from "@/components/thread";
+import { ThreadView as ThreadsComponent } from "@/app/(stories)/thread/[id]/thread";
 
 export default async function Threads({
   params: { id },

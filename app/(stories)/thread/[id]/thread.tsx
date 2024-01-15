@@ -14,6 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import Link from "next/link";
+import { Textarea } from "@/components/ui/textarea";
+import { revalidatePath } from "next/cache";
 
 async function getData({ threadId }: { threadId?: string }) {
   const thread = (
@@ -48,6 +50,11 @@ async function getData({ threadId }: { threadId?: string }) {
   return { thread, posts };
 }
 
+// async function postData({ threadId }: { threadId: string }) {
+
+//   return post;
+// }
+
 type Thread = Awaited<ReturnType<typeof getData>>["thread"];
 type Post = Awaited<ReturnType<typeof getData>>["posts"][0];
 
@@ -63,6 +70,9 @@ export async function ThreadView({ threadId }: { threadId: string }) {
       <ThreadHeader thread={thread} />
       <div className="mt-16 max-w-[65ch]">
         <PostList posts={posts} />
+        <div className="mt-8">
+          <PostForm threadId={threadId} />
+        </div>
       </div>
     </article>
   );
@@ -111,5 +121,40 @@ function PostItem({ post }: { post: Post }) {
         <CardFooter></CardFooter>
       </Card>
     </li>
+  );
+}
+
+function PostForm({ threadId }: { threadId: string }) {
+  async function handleSubmit(formData: FormData) {
+    "use server";
+
+    const text = formData.get("text") as string;
+
+    await db
+      .insert(postsTable)
+      .values({
+        id: nanoid(),
+        text,
+        created_at: new Date(),
+        thread_id: threadId,
+        userId: "SmzFVObi8hQYX7ccKLWML",
+      })
+      .execute();
+
+    revalidatePath("/thread/[id]", "page");
+  }
+
+  return (
+    <form className="flex flex-col space-y-4" action={handleSubmit}>
+      <div className="flex flex-col">
+        <label className="label" htmlFor="text">
+          New Post
+        </label>
+        <Textarea className="mt-2" name="text" id="text" />
+      </div>
+      <Button type="submit" variant="default">
+        Post
+      </Button>
+    </form>
   );
 }
