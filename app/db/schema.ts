@@ -56,9 +56,9 @@ export const threadsTable = pgTable(
   {
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
     name: varchar("name", { length: 256 }).notNull(),
-    category_id: varchar("category_id", { length: 256 }).references(
-      () => categoriesTable.id
-    ),
+    category_id: varchar("category_id", { length: 256 })
+      .references(() => categoriesTable.id)
+      .notNull(),
     created_at: timestamp("created_at").notNull().defaultNow(),
     updated_at: timestamp("updated_at").notNull().defaultNow(),
   },
@@ -78,10 +78,12 @@ export const postsTable = pgTable(
     id: varchar("id", { length: 256 }).primaryKey().notNull(),
     text: text("text").notNull(),
     created_at: timestamp("created_at").notNull().defaultNow(),
-    thread_id: varchar("thread_id", { length: 256 }).references(
-      () => threadsTable.id
-    ),
-    userId: varchar("user_id", { length: 256 }).references(() => usersTable.id),
+    thread_id: varchar("thread_id", { length: 256 })
+      .references(() => threadsTable.id)
+      .notNull(),
+    user_id: varchar("user_id", { length: 256 })
+      .references(() => usersTable.id)
+      .notNull(),
   },
   (t) => ({
     created_at_idx: index("posts_created_at_idx").on(t.created_at),

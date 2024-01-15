@@ -76,7 +76,7 @@ const main = async () => {
     thread_id: thread1.id,
     text: faker.lorem.paragraph(),
     created_at: new Date(),
-    userId: user1.id,
+    user_id: user1.id,
   };
 
   const post2: PostInsert = {
@@ -84,7 +84,7 @@ const main = async () => {
     thread_id: thread1.id,
     text: faker.lorem.paragraph(),
     created_at: new Date(),
-    userId: user2.id,
+    user_id: user2.id,
   };
 
   const post3: PostInsert = {
@@ -92,7 +92,7 @@ const main = async () => {
     thread_id: thread2.id,
     text: faker.lorem.paragraph(),
     created_at: new Date(),
-    userId: user1.id,
+    user_id: user1.id,
   };
 
   console.log("Seed start");

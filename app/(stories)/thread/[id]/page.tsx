@@ -1,4 +1,4 @@
-import { ThreadView as ThreadsComponent } from "@/app/(stories)/thread/[id]/thread";
+import { ThreadView } from "@/app/(stories)/thread/[id]/thread";
 
 export default async function Threads({
   params: { id },
@@ -9,5 +9,9 @@ export default async function Threads({
     return <p>Bad request</p>;
   }
 
-  return <ThreadsComponent threadId={id} />;
+  return (
+    <div className="flex animate-in slide-in-from-right-2 fade-in-0 duration-150">
+      <ThreadView threadId={id} />
+    </div>
+  );
 }

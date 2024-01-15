@@ -45,7 +45,7 @@ async function getData({ threadId }: { threadId?: string }) {
     .from(postsTable)
     .where(sql`${postsTable.thread_id} = ${thread.id}`)
     .orderBy(asc(postsTable.created_at))
-    .leftJoin(usersTable, sql`${postsTable.userId} = ${usersTable.id}`);
+    .leftJoin(usersTable, sql`${postsTable.user_id} = ${usersTable.id}`);
 
   return { thread, posts };
 }
@@ -81,7 +81,12 @@ export async function ThreadView({ threadId }: { threadId: string }) {
 function ThreadHeader({ thread }: { thread: Thread }) {
   return (
     <div className="flex flex-row w-full">
-      <Button size="icon" variant="ghost" className="shrink-0 -ml-11" asChild>
+      <Button
+        size="icon"
+        variant="ghost"
+        className="shrink-0 md:-ml-11 ml-0"
+        asChild
+      >
         <Link href="/">
           <ArrowLeftIcon />
         </Link>
@@ -137,7 +142,7 @@ function PostForm({ threadId }: { threadId: string }) {
         text,
         created_at: new Date(),
         thread_id: threadId,
-        userId: "SmzFVObi8hQYX7ccKLWML",
+        user_id: "SmzFVObi8hQYX7ccKLWML",
       })
       .execute();
 
