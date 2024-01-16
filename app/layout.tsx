@@ -1,5 +1,4 @@
-import { Suspense } from "react";
-
+import { Providers } from "./providers.tsx";
 import "./globals.css";
 import "@fontsource-variable/inter";
 
@@ -11,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Suspense fallback={null}>{children}</Suspense>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

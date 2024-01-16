@@ -4,29 +4,29 @@
 
 @layer base {
   :root {
-    --background: 300 20% 99%;
-    --foreground: 257 10% 14%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
 
-    --muted: 285 14% 95%;
-    --muted-foreground: 252 5% 41%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --popover: 300 20% 99%;
-    --popover-foreground: 257 10% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
 
-    --border: 252 76% 84%;
-    --input: 252 76% 84%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
 
-    --card: 300 20% 99%;
-    --card-foreground: 257 10% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 252 56% 57%;
-    --primary-foreground: 270 50% 99%;
+    --primary: 131 41% 46%;
+    --primary-foreground: 120 60% 99%;
 
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 257 10% 14%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 257 10% 14%;
+    --accent: 122 40% 85%;
+    --accent-foreground: 131 30% 18%;
 
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
@@ -37,10 +37,8 @@
   }
 
   .dark {
-    /* --background: 224 71% 4%;
-    --foreground: 213 31% 91%; */
-    --background: 270 6% 7%;
-    --foreground: 240 6% 94%;
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
 
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
@@ -48,15 +46,13 @@
     --accent: 216 34% 17%;
     --accent-foreground: 210 40% 98%;
 
-    /* --popover: 224 71% 4%; */
-    --popover: 270 6% 7%;
+    --popover: 224 71% 4%;
     --popover-foreground: 215 20.2% 65.1%;
 
     --border: 216 34% 17%;
     --input: 216 34% 17%;
 
-    /* --card: 224 71% 4%; */
-    --card: 270 6% 7%;
+    --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
 
     --primary: 210 40% 98%;
@@ -81,7 +77,9 @@
   body {
     @apply bg-background text-foreground;
     font-family: Inter, sans-serif;
-    font-feature-settings: "liga" 1, "calt" 1; /* fix for Chrome */
+    font-feature-settings:
+      "liga" 1,
+      "calt" 1; /* fix for Chrome */
   }
 }
 
