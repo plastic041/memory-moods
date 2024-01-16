@@ -1,27 +1,23 @@
-import { daysTable, type Day, db } from "@/app/db/schema.ts";
-import { eq } from "drizzle-orm";
+import { type Memory, memoriesTable, db } from "@/app/db/schema.ts";
+import { lt, gte, and } from "drizzle-orm";
+import { startOfDay } from "date-fns";
 
-function startOfDay(date: Date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
+export async function getMoods(date: Date = new Date()): Promise<Memory[]> {
+  const nextDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() + 1,
+  );
+  const [start, end] = [startOfDay(date), startOfDay(nextDate)];
 
-export async function getDay(date: Date = new Date()): Promise<Day> {
-  const start = startOfDay(date);
+  const moods = await db
+    .select({
+      id: memoriesTable.id,
+      mood: memoriesTable.mood,
+      date: memoriesTable.date,
+    })
+    .from(memoriesTable)
+    .where(and(lt(memoriesTable.date, end), gte(memoriesTable.date, start)));
 
-  const day = (
-    await db
-      .select({
-        created_at: daysTable.created_at,
-        mood_negative_2: daysTable.mood_negative_2,
-        mood_negative_1: daysTable.mood_negative_1,
-        mood_neutral: daysTable.mood_neutral,
-        mood_positive_1: daysTable.mood_positive_1,
-        mood_positive_2: daysTable.mood_positive_2,
-      })
-      .from(daysTable)
-      .where(eq(daysTable.created_at, start))
-      .limit(0)
-  )[0];
-
-  return day;
+  return moods;
 }

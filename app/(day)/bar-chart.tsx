@@ -1,15 +1,15 @@
-import type { Mood } from "./constants.ts";
+import type { Mood } from "@/app/db/schema.ts";
 
 function map(min: number, max: number, value: number) {
   return ((value - min) * 100) / (max - min);
 }
 
 const COLORS: { [key in Mood]: string } = {
-  mood_negative_2: "bg-violet-200",
-  mood_negative_1: "bg-blue-200",
-  mood_neutral: "bg-gray-200",
-  mood_positive_1: "bg-yellow-200",
-  mood_positive_2: "bg-green-200",
+  "-2": "bg-violet-200",
+  "-1": "bg-blue-200",
+  "0": "bg-gray-200",
+  "1": "bg-yellow-200",
+  "2": "bg-green-200",
 } as const;
 
 type BarChartProps = {

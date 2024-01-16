@@ -1,4 +1,4 @@
-import { pgTable, date, integer } from "drizzle-orm/pg-core";
+import { pgTable, varchar, index, pgEnum, date } from "drizzle-orm/pg-core";
 import { sql } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 // import * as dotenv from "dotenv";
@@ -12,13 +12,19 @@ if (!process.env.POSTGRES_URL) {
 
 export const db = drizzle(sql);
 
-export const daysTable = pgTable("days", {
-  created_at: date("created_at", { mode: "date" }).notNull(),
-  mood_negative_2: integer("mood_negative_2").notNull(),
-  mood_negative_1: integer("mood_negative_1").notNull(),
-  mood_neutral: integer("mood_neutral").notNull(),
-  mood_positive_1: integer("mood_positive_1").notNull(),
-  mood_positive_2: integer("mood_positive_2").notNull(),
-});
+export const moodEnum = pgEnum("mood", ["-2", "-1", "0", "1", "2"]);
 
-export type Day = typeof daysTable.$inferSelect;
+export const memoriesTable = pgTable(
+  "memories",
+  {
+    id: varchar("id", { length: 256 }).primaryKey().notNull(),
+    date: date("date", { mode: "date" }).notNull(),
+    mood: moodEnum("mood").notNull(),
+  },
+  (table) => ({
+    date_index: index("date_index").on(table.date),
+  }),
+);
+
+export type Memory = typeof memoriesTable.$inferSelect;
+export type Mood = Memory["mood"];

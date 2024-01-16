@@ -2,26 +2,24 @@
 export const OPTIONS = [
   {
     label: "😭",
-    value: "mood_negative_2",
+    value: "-2",
   },
   {
     label: "😔",
-    value: "mood_negative_1",
+    value: "-1",
   },
   {
     label: "😐",
-    value: "mood_neutral",
+    value: "0",
   },
   {
     label: "🙂",
-    value: "mood_positive_1",
+    value: "1",
   },
   {
     label: "😄",
-    value: "mood_positive_2",
+    value: "2",
   },
 ] as const;
 
 export const MOODS = OPTIONS.map((option) => option.value);
-
-export type Mood = (typeof MOODS)[number];

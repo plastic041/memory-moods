@@ -1,11 +1,12 @@
 "use client";
 
-import { useOptimistic, useState } from "react";
+import { useOptimistic, useState, startTransition } from "react";
 import { addMood } from "./action.ts";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { type Mood, OPTIONS } from "./constants.ts";
+import { OPTIONS } from "./constants.ts";
 import { isBefore, isAfter, sub } from "date-fns";
+import type { Mood } from "@/app/db/schema.ts";
 
 type ItemProps = {
   option: (typeof OPTIONS)[number];
@@ -28,7 +29,7 @@ type AddMoodProps = {
   moodCounts: { mood: Mood; count: number }[];
 };
 export function AddMood({ date, moodCounts }: AddMoodProps) {
-  const [mood, setMood] = useState<Mood>("mood_neutral");
+  const [mood, setMood] = useState<Mood>("0");
 
   const [optimisticMoodsCount, addOptimisticMood] = useOptimistic(
     moodCounts,
@@ -44,7 +45,7 @@ export function AddMood({ date, moodCounts }: AddMoodProps) {
       });
     },
   );
-  const createdMoodWithMood = addMood.bind(null, mood);
+  const addMoodWithMood = addMood.bind(null, mood).bind(null, date);
 
   const prevWeek = sub(new Date(), { weeks: 1 });
   const isRecentWeek =
@@ -83,8 +84,10 @@ export function AddMood({ date, moodCounts }: AddMoodProps) {
         className="mt-2"
         onClick={async () => {
           if (isRecentWeek) {
-            addOptimisticMood(mood);
-            await createdMoodWithMood();
+            startTransition(() => {
+              return addOptimisticMood(mood);
+            });
+            await addMoodWithMood();
           }
         }}
         aria-disabled={!isRecentWeek}
