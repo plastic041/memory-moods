@@ -29,7 +29,7 @@ export function WithOptimistic({ moodCounts, date }: WithOptimisticProps) {
   const addMoodBind = addMood.bind(null, mood).bind(null, date);
 
   return (
-    <>
+    <div>
       <div className="mt-4 flex flex-col items-center">
         <BarChart moodCounts={optimisticMoodsCount} />
       </div>
@@ -44,6 +44,6 @@ export function WithOptimistic({ moodCounts, date }: WithOptimisticProps) {
           setMood={setMood}
         />
       </div>
-    </>
+    </div>
   );
 }

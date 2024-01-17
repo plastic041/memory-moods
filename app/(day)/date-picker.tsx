@@ -31,10 +31,19 @@ export function DatePicker() {
   }
 
   return (
-    <div className="flex flex-row space-x-2">
+    <div className="flex flex-row gap-2">
+      <Button
+        variant="outline"
+        onClick={() => {
+          setDate(new Date());
+        }}
+      >
+        오늘
+      </Button>
       <Button
         size="icon"
         variant="outline"
+        className="ml-4"
         onClick={() => {
           const prevDay = new Date(date);
           prevDay.setDate(prevDay.getDate() - 1);

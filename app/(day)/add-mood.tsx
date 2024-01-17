@@ -96,7 +96,7 @@ export function AddMood({
         }}
         aria-disabled={!isRecentWeek}
       >
-        {isRecentWeek ? "기분 기록" : `최근 일주일만 기록할 수 있습니다.`}
+        {isRecentWeek ? "기분 기록" : `지난 일주일만 기록할 수 있습니다.`}
       </Button>
     </div>
   );

@@ -30,7 +30,7 @@ export default async function Page({
         <div className="flex justify-end">
           <DatePicker />
         </div>
-        <Suspense fallback={null}>
+        <Suspense fallback={null} key={query.data.date.toISOString()}>
           <WithData date={query.data.date} />
         </Suspense>
       </div>
