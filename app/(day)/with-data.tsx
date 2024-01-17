@@ -1,10 +1,9 @@
 import { getMoods } from "./get-moods.ts";
-import { AddMood } from "./add-mood.tsx";
 import type { Mood } from "@/app/db/schema.ts";
-import { BarChart } from "@/app/(day)/bar-chart.tsx";
+import { WithOptimistic } from "./with-optimistic.tsx";
 
-export default async function StoriesPage({ date }: { date: string }) {
-  const moods = await getMoods(new Date(date));
+export default async function StoriesPage({ date }: { date: Date }) {
+  const moods = await getMoods(date);
 
   const moodCounts: {
     [key in Mood]: number;
@@ -26,14 +25,5 @@ export default async function StoriesPage({ date }: { date: string }) {
     { mood: "2", count: moodCounts[2] },
   ];
 
-  return (
-    <>
-      <div className="mt-4 flex flex-col items-center">
-        <BarChart moodCounts={moodCountsArray} />
-      </div>
-      <div className="flex">
-        <AddMood date={date} moodCounts={moodCountsArray} key={date} />
-      </div>
-    </>
-  );
+  return <WithOptimistic moodCounts={moodCountsArray} date={date} />;
 }

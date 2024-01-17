@@ -1,5 +1,5 @@
 import { type Memory, memoriesTable, db } from "@/app/db/schema.ts";
-import { lt, gte, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { startOfDay } from "date-fns";
 
 export async function getMoods(date: Date = new Date()): Promise<Memory[]> {
@@ -17,7 +17,7 @@ export async function getMoods(date: Date = new Date()): Promise<Memory[]> {
       date: memoriesTable.date,
     })
     .from(memoriesTable)
-    .where(and(lt(memoriesTable.date, end), gte(memoriesTable.date, start)));
+    .where(eq(memoriesTable.date, start));
 
   return moods;
 }

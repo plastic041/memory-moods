@@ -31,7 +31,7 @@ export default async function Page({
           <DatePicker />
         </div>
         <Suspense fallback={null}>
-          <WithData date={query.data.date.toISOString()} />
+          <WithData date={query.data.date} />
         </Suspense>
       </div>
     </div>

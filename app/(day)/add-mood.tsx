@@ -1,12 +1,9 @@
-"use client";
-
-import { useOptimistic, useState, startTransition } from "react";
-import { addMood } from "./action.ts";
+import { startTransition } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { OPTIONS } from "./constants.ts";
 import { isBefore, isAfter, sub } from "date-fns";
-import type { Mood } from "@/app/db/schema.ts";
+import type { Memory, Mood } from "@/app/db/schema.ts";
 
 type ItemProps = {
   option: (typeof OPTIONS)[number];
@@ -25,27 +22,35 @@ function Item({ option, count }: ItemProps) {
 }
 
 type AddMoodProps = {
-  date: string;
+  date: Date;
   moodCounts: { mood: Mood; count: number }[];
+  addMood: () => Promise<Memory>;
+  addOptimisticMood: (mood: Mood) => void;
+  mood: Mood;
+  setMood: (mood: Mood) => void;
 };
-export function AddMood({ date, moodCounts }: AddMoodProps) {
-  const [mood, setMood] = useState<Mood>("0");
-
-  const [optimisticMoodsCount, addOptimisticMood] = useOptimistic(
-    moodCounts,
-    (state: typeof moodCounts, newMood: Mood) => {
-      return state.map((moodCount) => {
-        if (moodCount.mood === newMood) {
-          return {
-            ...moodCount,
-            count: moodCount.count + 1,
-          };
-        }
-        return moodCount;
-      });
-    },
-  );
-  const addMoodWithMood = addMood.bind(null, mood).bind(null, date);
+export function AddMood({
+  date,
+  moodCounts,
+  addMood,
+  addOptimisticMood,
+  mood,
+  setMood,
+}: AddMoodProps) {
+  // const [optimisticMoodsCount, addOptimisticMood] = useOptimistic(
+  //   moodCounts,
+  //   (state: typeof moodCounts, newMood: Mood) => {
+  //     return state.map((moodCount) => {
+  //       if (moodCount.mood === newMood) {
+  //         return {
+  //           ...moodCount,
+  //           count: moodCount.count + 1,
+  //         };
+  //       }
+  //       return moodCount;
+  //     });
+  //   },
+  // );
 
   const prevWeek = sub(new Date(), { weeks: 1 });
   const isRecentWeek =
@@ -70,9 +75,8 @@ export function AddMood({ date, moodCounts }: AddMoodProps) {
             <Item
               option={option}
               count={
-                optimisticMoodsCount.find(
-                  (moodCount) => moodCount.mood === option.value,
-                )?.count ?? 0
+                moodCounts.find((moodCount) => moodCount.mood === option.value)
+                  ?.count ?? 0
               }
             />
           </ToggleGroupItem>
@@ -85,9 +89,9 @@ export function AddMood({ date, moodCounts }: AddMoodProps) {
         onClick={async () => {
           if (isRecentWeek) {
             startTransition(() => {
-              return addOptimisticMood(mood);
+              addOptimisticMood(mood);
             });
-            await addMoodWithMood();
+            await addMood();
           }
         }}
         aria-disabled={!isRecentWeek}
