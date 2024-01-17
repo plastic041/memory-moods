@@ -13,7 +13,7 @@ function Item({ option, count }: ItemProps) {
   return (
     <div
       key={`${option.value}-${count}`}
-      className="flex items-center space-x-2 tabular-nums"
+      className="flex items-center space-x-0.5 tabular-nums sm:space-x-2"
     >
       <span>{option.label}</span>
       <span className="animate-scale-up">{count}</span>
@@ -37,40 +37,25 @@ export function AddMood({
   mood,
   setMood,
 }: AddMoodProps) {
-  // const [optimisticMoodsCount, addOptimisticMood] = useOptimistic(
-  //   moodCounts,
-  //   (state: typeof moodCounts, newMood: Mood) => {
-  //     return state.map((moodCount) => {
-  //       if (moodCount.mood === newMood) {
-  //         return {
-  //           ...moodCount,
-  //           count: moodCount.count + 1,
-  //         };
-  //       }
-  //       return moodCount;
-  //     });
-  //   },
-  // );
-
   const prevWeek = sub(new Date(), { weeks: 1 });
   const isRecentWeek =
     isAfter(new Date(date), prevWeek) && isBefore(new Date(date), new Date());
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       <ToggleGroup
         defaultValue="0"
         type="single"
         variant="outline"
-        size="lg"
         value={mood}
         onValueChange={(value) => setMood(value as typeof mood)}
+        className="grid w-full grid-cols-5"
       >
         {OPTIONS.map((option) => (
           <ToggleGroupItem
             key={option.value}
             value={option.value}
-            className="text-2xl"
+            className="px-2 py-1.5 sm:px-8 sm:py-4 sm:text-2xl"
           >
             <Item
               option={option}
@@ -85,7 +70,7 @@ export function AddMood({
       <Button
         size="lg"
         type="button"
-        className="mt-2"
+        className="mt-2 text-base sm:text-lg"
         onClick={async () => {
           if (isRecentWeek) {
             startTransition(() => {

@@ -23,7 +23,7 @@ export function BarChart({ moodCounts }: BarChartProps) {
   );
 
   return (
-    <div className="grid h-64 w-full grid-cols-5 place-items-center items-end gap-1">
+    <div className="grid h-full w-full grid-cols-5 place-items-center items-end gap-1">
       {moodCounts.map((moodCount) => {
         const color = COLORS[moodCount.mood];
         const y = map(minCount, maxCount, moodCount.count);

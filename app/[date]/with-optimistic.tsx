@@ -4,7 +4,7 @@ import { useOptimistic, useState } from "react";
 import { AddMood } from "./add-mood.tsx";
 import { BarChart } from "./bar-chart.tsx";
 import type { Mood } from "@/app/db/schema.ts";
-import { addMood } from "@/app/(day)/action.ts";
+import { addMood } from "@/app/[date]/action.ts";
 
 type WithOptimisticProps = {
   moodCounts: { mood: Mood; count: number }[];
@@ -29,21 +29,17 @@ export function WithOptimistic({ moodCounts, date }: WithOptimisticProps) {
   const addMoodBind = addMood.bind(null, mood).bind(null, date);
 
   return (
-    <div>
-      <div className="mt-4 flex flex-col items-center">
-        <BarChart moodCounts={optimisticMoodsCount} />
-      </div>
-      <div className="flex">
-        <AddMood
-          date={date}
-          moodCounts={optimisticMoodsCount}
-          key={date.toISOString()}
-          addMood={addMoodBind}
-          addOptimisticMood={addOptimisticMood}
-          mood={mood}
-          setMood={setMood}
-        />
-      </div>
-    </div>
+    <>
+      <BarChart moodCounts={optimisticMoodsCount} />
+      <AddMood
+        date={date}
+        moodCounts={optimisticMoodsCount}
+        key={date.toISOString()}
+        addMood={addMoodBind}
+        addOptimisticMood={addOptimisticMood}
+        mood={mood}
+        setMood={setMood}
+      />
+    </>
   );
 }

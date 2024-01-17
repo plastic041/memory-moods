@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { format } from "date-fns";
 import { CalendarIcon, ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -12,22 +12,25 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+function invariant(condition: unknown, message: string): asserts condition {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
 export function DatePicker() {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { date: dateParam } = useParams();
+  invariant(typeof dateParam === "string", "dateParam must be a string");
 
-  const date = searchParams.get("date")
-    ? new Date(searchParams.get("date")!)
-    : new Date();
+  const date = dateParam ? new Date(dateParam) : new Date();
 
   function setDate(date: Date | undefined) {
     if (!date) {
       return;
     }
 
-    const url = `${pathname}?date=${format(date, "yyyy-MM-dd")}`;
-    router.push(url, { scroll: false });
+    router.push(`/${format(date, "yyyy-MM-dd")}`);
   }
 
   return (
