@@ -4,7 +4,7 @@ import { useOptimistic, useState } from "react";
 import { AddMood } from "./add-mood.tsx";
 import { BarChart } from "./bar-chart.tsx";
 import type { Mood } from "@/app/db/schema.ts";
-import { addMood } from "@/app/[date]/action.ts";
+import { addMood } from "@/app/(date)/action.ts";
 
 type WithOptimisticProps = {
   moodCounts: { mood: Mood; count: number }[];
@@ -32,7 +32,6 @@ export function WithOptimistic({ moodCounts, date }: WithOptimisticProps) {
     <>
       <BarChart moodCounts={optimisticMoodsCount} />
       <AddMood
-        date={date}
         moodCounts={optimisticMoodsCount}
         key={date.toISOString()}
         addMood={addMoodBind}

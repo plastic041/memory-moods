@@ -1,8 +1,8 @@
-import { startTransition } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { OPTIONS } from "./constants.ts";
-import { isBefore, isAfter, sub } from "date-fns";
+import { startOfDay } from "date-fns";
 import type { Memory, Mood } from "@/app/db/schema.ts";
 
 type ItemProps = {
@@ -21,8 +21,9 @@ function Item({ option, count }: ItemProps) {
   );
 }
 
+const today = startOfDay(new Date());
+
 type AddMoodProps = {
-  date: Date;
   moodCounts: { mood: Mood; count: number }[];
   addMood: () => Promise<Memory>;
   addOptimisticMood: (mood: Mood) => void;
@@ -30,16 +31,37 @@ type AddMoodProps = {
   setMood: (mood: Mood) => void;
 };
 export function AddMood({
-  date,
   moodCounts,
   addMood,
   addOptimisticMood,
   mood,
   setMood,
 }: AddMoodProps) {
-  const prevWeek = sub(new Date(), { weeks: 1 });
-  const isRecentWeek =
-    isAfter(new Date(date), prevWeek) && isBefore(new Date(date), new Date());
+  const [localStorageVotedToday, setLocalStorageVotedToday] = useState<
+    string | null
+  >(null);
+
+  useEffect(() => {
+    setLocalStorageVotedToday(localStorage.getItem(`voted-${today}`));
+  }, []);
+
+  const isVotedToday = localStorageVotedToday === "true";
+
+  async function vote() {
+    startTransition(() => {
+      addOptimisticMood(mood);
+    });
+    await addMood();
+    localStorage.setItem(`voted-${today}`, "true");
+    setLocalStorageVotedToday("true");
+  }
+
+  function handleClick() {
+    if (isVotedToday) {
+      return;
+    }
+    vote();
+  }
 
   return (
     <div className="flex w-full flex-col items-center">
@@ -71,17 +93,10 @@ export function AddMood({
         size="lg"
         type="button"
         className="mt-2 text-base sm:text-lg"
-        onClick={async () => {
-          if (isRecentWeek) {
-            startTransition(() => {
-              addOptimisticMood(mood);
-            });
-            await addMood();
-          }
-        }}
-        aria-disabled={!isRecentWeek}
+        onClick={handleClick}
+        aria-disabled={isVotedToday}
       >
-        {isRecentWeek ? "기분 기록" : `지난 일주일만 기록할 수 있습니다.`}
+        {isVotedToday ? "오늘은 이미 기록했습니다." : "마음 기록"}
       </Button>
     </div>
   );

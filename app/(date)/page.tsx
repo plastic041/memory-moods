@@ -1,31 +1,29 @@
-import z from "zod";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { Suspense } from "react";
 
-import { DatePicker } from "./date-picker.tsx";
 import WithData from "./with-data.tsx";
-import { AddMoodLoader } from "@/app/[date]/add-mood-loader.tsx";
+import { AddMoodLoader } from "@/app/(date)/add-mood-loader.tsx";
+import type { Metadata } from "next";
 
-const ParamsSchema = z
-  .string()
-  .pipe(z.coerce.date())
-  .optional()
-  .default(format(new Date(), "yyyy-MM-dd"));
+export function generateMetadata(): Metadata {
+  const date = startOfDay(new Date());
 
-export default async function Page({
-  params,
-}: {
-  params: {
-    date: string;
+  return {
+    title: `Mood for ${format(date, "yyyy-MM-dd, EEEE")}`,
+    description: `Mood for ${format(date, "yyyy-MM-dd, EEEE")}`,
   };
-}) {
-  const date = ParamsSchema.parse(params.date);
+}
+
+export default async function Page() {
+  const date = startOfDay(new Date());
 
   return (
     <div className="mx-auto flex h-full w-full max-w-xs flex-col justify-center sm:max-w-2xl">
       <div className="flex flex-col">
-        <div className="flex justify-end">
-          <DatePicker />
+        <div className="flex">
+          <h2 className="h2 w-full text-right">
+            {format(date, "yyyy-MM-dd, EEEE")}
+          </h2>
         </div>
         <div className="mt-8 flex h-[320px] flex-col items-center">
           <Suspense
